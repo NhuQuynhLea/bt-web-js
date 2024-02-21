@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student'Infomations</title>
+    <style>
+        table {
+            width: 60%;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Student'Infomations</h1>
+    <button id="enter" onclick="onEnter()">Enter student'infomations</button>
+    <div id="form">
+        <form id="myForm">
+            <br /> <br />
+            <label>MSV:</label>
+            <input type='text' name='msv' id="msv">
+            <br /> <br />
+            <label>Fullname:</label>
+            <input type='text' name='name'>
+            <br /> <br />
+            <label>Dob:</label>
+            <input type='text' name='dob'>
+            <br /> <br />
+            <label>Class:</label>
+            <input type='text' name='class'>
+            <br /> <br />
+            <label>GPA:</label>
+            <input type='text' name='gpa'>
+            <br /> <br />
+            <input type="button" value="Create" id="submit">
+            <input type="button" value="Update" id="update">
+        </form>
+    </div>
+    <table style="width: 60%; border-collapse: collapse;">
+        <thread>
+            <tr>
+                <th>STT</th>
+                <th>MSV</th>
+                <th>Name</th>
+                <th>Dob</th>
+                <th>Class</th>
+                <th>GPA</th>
+                <th>Actions</th>
+            </tr>
+        </thread>
+        <tbody id="data">
+    </table>
+</body>
+<script>
+    document.getElementById('form').style.visibility = 'hidden';
+    var studentList = [];
+    let id = 0;
+    function onEnter() {
+        var x = document.getElementById('form');
+        if (x.style.visibility === 'hidden') {
+            x.style.visibility = 'visible';
+        } else {
+            x.style.visibility = 'hidden';
+        }
+    }
+    function Student(id, msv, fullname, dob, studentClass, gpa) {
+        this.id = id;
+        this.msv = msv;
+        this.fullname = fullname;
+        this.dob = dob;
+        this.studentClass = studentClass;
+        this.gpa = gpa;
+    }
+    document.getElementById('submit').addEventListener('click', () => { onSubmit() });
+    function onSubmit() {
+        id++;
+        var msv = document.getElementById("myForm").elements[0].value;
+        var name = document.getElementById("myForm").elements[1].value;
+        var dob = document.getElementById("myForm").elements[2].value;
+        var lop = document.getElementById("myForm").elements[3].value;
+        var gpa = document.getElementById("myForm").elements[4].value;
+        const student = new Student(id, msv, name, dob, lop, gpa);
+        studentList.push(student);
+        insertData();
+        document.getElementById("myForm").reset();
+    }
+    function insertData() {
+        var tableBody = document.getElementById("data")
+        tableBody.innerHTML = "";
+
+        studentList.forEach(student => {
+            const tr = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = student.id;
+            tr.appendChild(idCell);
+
+            const msvCell = document.createElement('td');
+            msvCell.textContent = student.msv;
+            tr.appendChild(msvCell);
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = student.fullname;
+            tr.appendChild(nameCell);
+
+            const dobCell = document.createElement('td');
+            dobCell.textContent = student.dob;
+            tr.appendChild(dobCell);
+
+            const classCell = document.createElement('td');
+            classCell.textContent = student.studentClass;
+            tr.appendChild(classCell);
+
+            const gpaCell = document.createElement('td');
+            gpaCell.textContent = student.gpa;
+            tr.appendChild(gpaCell);
+
+            const actionCell = document.createElement('td');
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.addEventListener('click', () => {
+                const row = editButton.parentElement.parentElement;
+                onEdit(student, row)
+            });
+            actionCell.appendChild(editButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.style.marginLeft = '5px';
+            deleteButton.addEventListener('click', () => {
+                const row = deleteButton.parentElement.parentElement;
+                row.remove();
+            });
+            actionCell.appendChild(deleteButton);
+
+            tr.appendChild(actionCell);
+
+            tableBody.appendChild(tr);
+
+        })
+    }
+    function onEdit(student, row) {
+        let data = student;
+        document.getElementById("myForm").querySelector('[name="msv"]').value = data.msv;
+        document.getElementById("myForm").querySelector('[name="name"]').value = data.fullname;
+        document.getElementById("myForm").querySelector('[name="dob"]').value = data.dob;
+        document.getElementById("myForm").querySelector('[name="class"]').value = data.studentClass;
+        document.getElementById("myForm").querySelector('[name="gpa"]').value = data.gpa;
+
+        // document.getElementById('submit').value = "Update"
+        document.getElementById('update').addEventListener('click', () => {
+            data.msv = document.getElementById("myForm").elements[0].value;
+            data.fullname = document.getElementById("myForm").elements[1].value;
+            data.dob = document.getElementById("myForm").elements[2].value;
+            data.studentClass = document.getElementById("myForm").elements[3].value;
+            data.gpa = document.getElementById("myForm").elements[4].value;
+            console.log(data.fullname, "edit 2");
+            const student = new Student(data.id, data.msv, data.fullname, data.dob, data.studentClass, data.gpa);
+            studentList[data.id - 1] = student;
+            console.log(studentList);
+            row.cells[0].textContent = student.id;
+            row.cells[1].textContent = student.msv;
+            row.cells[2].textContent = student.fullname;
+            row.cells[3].textContent = student.dob;
+            row.cells[4].textContent = student.studentClass;
+            row.cells[5].textContent = student.gpa;
+            document.getElementById("myForm").reset();
+        })
+    }
+</script>
+
+</html>
