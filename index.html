@@ -40,7 +40,7 @@
             <input type='text' name='gpa'>
             <br /> <br />
             <input type="button" value="Create" id="submit">
-            <input type="button" value="Update" id="update">
+            <input type="button" value="Update" id="update" onclick="updateButtonClickHandler(data,row1)">
         </form>
     </div>
     <table style="width: 60%; border-collapse: collapse;">
@@ -60,7 +60,7 @@
 </body>
 <script>
     document.getElementById('form').style.visibility = 'hidden';
-    var studentList = [];
+    let studentList = [];
     let id = 0;
     function onEnter() {
         var x = document.getElementById('form');
@@ -135,8 +135,10 @@
             deleteButton.textContent = 'Delete';
             deleteButton.style.marginLeft = '5px';
             deleteButton.addEventListener('click', () => {
+                studentList.splice(index, student.id);
                 const row = deleteButton.parentElement.parentElement;
                 row.remove();
+
             });
             actionCell.appendChild(deleteButton);
 
@@ -146,34 +148,44 @@
 
         })
     }
+    var data;
+    var row1;
     function onEdit(student, row) {
-        let data = student;
+        data = student;
+        row1 = row;
         document.getElementById("myForm").querySelector('[name="msv"]').value = data.msv;
         document.getElementById("myForm").querySelector('[name="name"]').value = data.fullname;
         document.getElementById("myForm").querySelector('[name="dob"]').value = data.dob;
         document.getElementById("myForm").querySelector('[name="class"]').value = data.studentClass;
         document.getElementById("myForm").querySelector('[name="gpa"]').value = data.gpa;
-
+        console.log(row);
         // document.getElementById('submit').value = "Update"
-        document.getElementById('update').addEventListener('click', () => {
-            data.msv = document.getElementById("myForm").elements[0].value;
-            data.fullname = document.getElementById("myForm").elements[1].value;
-            data.dob = document.getElementById("myForm").elements[2].value;
-            data.studentClass = document.getElementById("myForm").elements[3].value;
-            data.gpa = document.getElementById("myForm").elements[4].value;
-            console.log(data.fullname, "edit 2");
-            const student = new Student(data.id, data.msv, data.fullname, data.dob, data.studentClass, data.gpa);
-            studentList[data.id - 1] = student;
-            console.log(studentList);
-            row.cells[0].textContent = student.id;
-            row.cells[1].textContent = student.msv;
-            row.cells[2].textContent = student.fullname;
-            row.cells[3].textContent = student.dob;
-            row.cells[4].textContent = student.studentClass;
-            row.cells[5].textContent = student.gpa;
-            document.getElementById("myForm").reset();
-        })
+        // document.getElementById('update').addEventListener('click', () => {
+        //     updateButtonClickHandler(data, row)
+        // })
+
     }
+    function updateButtonClickHandler(data, row1) {
+        console.log(row1);
+        data.msv = document.getElementById("myForm").elements[0].value;
+        data.fullname = document.getElementById("myForm").elements[1].value;
+        data.dob = document.getElementById("myForm").elements[2].value;
+        data.studentClass = document.getElementById("myForm").elements[3].value;
+        data.gpa = document.getElementById("myForm").elements[4].value;
+        console.log(data.fullname, "edit 2");
+        const student = new Student(data.id, data.msv, data.fullname, data.dob, data.studentClass, data.gpa);
+        studentList[data.id - 1] = student;
+        console.log(studentList);
+        row1.cells[0].textContent = student.id;
+        row1.cells[1].textContent = student.msv;
+        row1.cells[2].textContent = student.fullname;
+        row1.cells[3].textContent = student.dob;
+        row1.cells[4].textContent = student.studentClass;
+        row1.cells[5].textContent = student.gpa;
+        // document.getElementById('update').removeEventListener('click', updateButtonClickHandler);
+        document.getElementById("myForm").reset();
+    }
+
 </script>
 
 </html>
